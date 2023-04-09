@@ -3,7 +3,7 @@ My input is gonna be the 96 BDec_output.vcf file that I recieved... I will renam
 1-rename chr according to convenient situation. now I have a lifted data to hg19 but it is still with "chr" so I better rename them back to just nums
 
 # Generate a chromosome renaming file
-for CHR in {1..22} X ; do 
+>for CHR in {1..22} X ; do 
     echo ${CHR} chr${CHR}
 done >> chr_names_to19.txt
 
@@ -14,7 +14,7 @@ done
 
 2-Now I have to keep only the needed chromosomes (which are in this case: 20,22)
 
-DATASET=data
+>DATASET=data
 # A comma-separated string of chrs to keep
 chrs=$(echo chr{20,22} | tr ' ' ',')
 
@@ -23,19 +23,191 @@ bcftools view -t $chrs ${DATASET}.vcf.gz \
     -Oz -o chrfiltered_${DATASET}.vcf.gz
   
 3-Align with reference genome to correct any flips (the same file we aligned our panel with)
+also Replace the ID column with a CHR_POS_REF_ALT
 
-DATASET=chrfiltered_data
-FASTA=/path/to/your/reference_genome.fasta
+
+>DATASET=data
+FASTA=/path/to/hs37d5.fa
 
 # Align the alleles to the reference genome, 
 # and keep only biallelic records
 bcftools norm -f ${FASTA} -c ws \
-    ${DATASET}_chrfiltered.vcf.gz -Ou | \
+    chrfiltered_${DATASET}.vcf.gz -Ou | \
 bcftools view -m 2 -M 2 \
     -Oz -o ${DATASET}_refcorrected.vcf.gz
 
-# Replace the ID column with a CHR_POS_REF_ALT
-bcftools annotate \
+> bcftools annotate \
     --set-id '%CHROM\_%POS\_%REF\_%ALT' \
     ${DATASET}_refcorrected.vcf.gz \
-    -Oz -o ${DATASET}_SNPID.vcf.gz
+    -Oz -o SNPID_${DATASET}.vcf.gz
+
+4-Remove any samples that are duplicates with the panel (like.. same sample is used by panel and by my data..it's too Unthrowable but not impossible)
+panel sample id txt is from stage 1 step 6
+
+>DATASET=chrfiltered_data
+PANEL_ID=/path/to/panel_sample_IDs.txt 
+
+# Copy the panel sample ID file with a different name to the working directory
+cp ${PANEL_ID} duplicate_sample_IDs.txt
+
+# Generate a list of chip data sample IDs, 
+# keep only duplicates and 
+# append to the list of panel sample IDs
+bcftools query -l SNPID_${DATASET}.vcf.gz | \
+    uniq -d >> duplicate_sample_IDs.txt
+
+# Exclude duplicate samples and MAC=0 variants, 
+# and update AF value after sample removals.
+# Finally, exclude duplicate variants
+bcftools view -S ^duplicate_sample_IDs.txt \
+   --force-samples SNPID_${DATASET}.vcf.gz -Ou | \
+bcftools +fill-tags -Ou -- -t AC,AN,AF | \
+bcftools norm -d none \
+    -Oz -o nodup_${DATASET}.vcf.gz
+
+5-Exclude rare variants (low AC):
+
+>DATASET=chrfiltered_data
+# Remove low allele count variants 
+# (redundant if they are already removed)
+bcftools view -e 'INFO/AC<3 | (INFO/AN-INFO/AC)<3' \
+    nodup_${DATASET}.vcf.gz \
+    -Oz -o AF_${DATASET}.vcf.gz
+    
+6-Generate a frequency table (frq) for the chip:
+
+>DATASET=chrfiltered_data
+
+# Generate a tab-delimited header
+echo -e 'CHR\tSNP\tREF\tALT\tAF' \
+    > ${DATASET}_chip.frq
+
+# Query the required fields from the VCF file 
+# and append to the allele frequency file
+bcftools query \
+    -f '%CHROM\t%ID\t%REF\t%ALT\t%INFO/AF\n' \
+    AF_${DATASET}.vcf.gz \
+    >> chip_${DATASET}.frq
+
+7-Compare AF in both chip and panel with R:
+> touch plot_AF.R
+> nano plot_AF.R
+#then copy these contents:
+-------------------------
+#!/bin/env Rscript --no-save
+
+library(data.table) # For fast fread()
+# Input variables
+args <- commandArgs(TRUE)
+infrq <- args[1] # Full path to chip data .frq file
+indataset <- args[2] # Dataset name prefix
+sub_dataset <- basename(indataset) # Subset the dataset name
+ref_panel <- args[3] # Full path to reference panel .frq file
+af_diff <- as.numeric(args[4]) # Max AF difference to panel
+af_fc <- as.numeric(args[5]) # Max AF fold change to panel
+
+# Read in the frequency files
+chip <- fread(infrq, header = TRUE)
+panel <- fread(ref_panel, header = TRUE)
+
+# Take an intersection of the panel and chip data 
+# based on SNP column (in format CHR_POS_REF_ALT)
+isec <- merge(panel, chip, by = c("CHR", "SNP", "REF", "ALT"))
+colnames(isec)[c(5,6)] <- c("AF_PANEL", "AF_CHIP")
+
+isec$AF_diff <- abs(isec$AF_PANEL - isec$AF_CHIP)
+isec$AF_ratio <- isec$AF_CHIP/isec$AF_PANEL
+isec$AF_FC <- log2(isec$AF_ratio)
+
+# Check if AFs are within the pp and fold change ranges
+af_ok <- ((isec$AF_diff < af_diff) & 
+         ((isec$AF_FC < af_fc) & (isec$AF_FC > -af_fc)))
+
+exclude <- !af_ok
+
+# Generate an exclusion list for variants not in the panel
+nonpanel <- chip[!(chip$SNP) %in% (isec$SNP)]
+# Generate AF list for discordant variants
+af_discrepant <- isec[exclude]
+
+# Save the plots as png
+png(paste0(sub_dataset, "_AFs.png"), 
+    width = 1200, height = 600)
+    par(mfrow = c(1,2)) 
+    par(cex.axis = 1.6, cex.lab = 1.5, cex.main = 1.6)
+
+    # Plot first all and then excludable variants
+    plot(isec$AF_PANEL, isec$AF_CHIP, col=1, pch=20, 
+           main=paste0("Chip data AF vs. reference panel AF\n", 
+           sub_dataset), 
+           xlab="Panel AF", ylab="Chip AF")
+    points(isec[exclude]$AF_PANEL, isec[exclude]$AF_CHIP, 
+            col=2, pch=20)
+    # Draw a legend
+    legend("topleft", legend=c(
+           paste0("Concordant AF, n = ", nrow(isec[!exclude])), 
+           paste0("Discordant AF, n = ", nrow(isec[exclude])), 
+           paste0("Non-panel, n = ", nrow(nonpanel))), 
+           col=c("black", "red", "white"), pch=20, cex=1.2)
+
+    # Add chip AF histogram to the same png
+    hist(isec[!exclude]$AF_CHIP, breaks=100, 
+            main=paste0("Chip AF for concordant variants\n", 
+            sub_dataset), 
+            xlab="Chip AF")
+dev.off()
+
+# Write out the exclusion lists (SNPID for bcftools)
+# Highly discrepant AF values
+write.table(isec[exclude]$SNP, 
+        paste0(sub_dataset, "_exclude.txt"), 
+        quote=F, row.names=F, col.names=F)
+# Variants noit present in the reference panel
+write.table(nonpanel$SNP, 
+        paste0(sub_dataset, "_nonpanel_exclude.txt"), 
+        quote=F, row.names=F, col.names=F)
+
+# Write out the isec without exclusions 
+write.table(isec[!exclude]$SNP, 
+        paste0(sub_dataset, "_panel_isec.txt"), 
+        quote=F, row.names=F, col.names=F)
+
+# Write out the discrepant AFs in case needed
+write.table(af_discrepant, 
+        paste0(sub_dataset, "_discrepant_AF.txt"), 
+        quote = F, row.names = F, sep = "\t")
+
+------------------
+
+>DATASET=chrfiltered_data
+PANEL_FRQ=/path/to/panel.frq
+
+Rscript --no-save /path/to/plot_AF.R \
+    $chip_${DATASET}.frq \
+    ${DATASET} \
+    ${PANEL_FRQ} \
+    0.1 \
+    5
+ 
+###At this point.. info texts and a PNG of a plot will be saved to comparison
+
+8-Remove every excluded SNPs (that either show high discordance or not present)
+DATASET=chrfiltered_data
+
+# Sort the exclusion lists
+sort -V ${DATASET}_exclude.txt \
+    > ${DATASET}_exclusion1.txt
+sort -V ${DATASET}_nonpanel_exclude.txt \
+    > ${DATASET}_exclusion2.txt
+
+# Exclude the variants showing highly discrepant AF
+bcftools view -e ID=@${DATASET}_exclusion1.txt  \
+    AF_${DATASET}.vcf.gz \
+    -Oz -o ${DATASET}_exclusion1.vcf.gz
+
+# Exclude the variants not present in the reference panel
+bcftools view -e ID=@${DATASET}_exclusion2.txt \
+    ${DATASET}_exclusion1.vcf.gz \
+    -Oz -o ${DATASET}_for_phasing.vcf.gz
+
+-------------------------Now we have a file of DATA for Phasing-------------------------
