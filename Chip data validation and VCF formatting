@@ -1,0 +1,41 @@
+My input is gonna be the 96 BDec_output.vcf file that I recieved... I will rename it to just data.vcf
+
+1-rename chr according to convenient situation. now I have a lifted data to hg19 but it is still with "chr" so I better rename them back to just nums
+
+# Generate a chromosome renaming file
+for CHR in {1..22} X ; do 
+    echo ${CHR} chr${CHR}
+done >> chr_names_to19.txt
+
+for CHR in {1..22} X; do
+    bcftools annotate --rename-chrs chr_names_to19.txt \
+        data.renamed.vcf.gz
+done
+
+2-Now I have to keep only the needed chromosomes (which are in this case: 20,22)
+
+DATASET=data
+# A comma-separated string of chrs to keep
+chrs=$(echo chr{20,22} | tr ' ' ',')
+
+# Keep only those wanted chromosomes
+bcftools view -t $chrs ${DATASET}.vcf.gz \
+    -Oz -o chrfiltered_${DATASET}.vcf.gz
+  
+3-Align with reference genome to correct any flips (the same file we aligned our panel with)
+
+DATASET=chrfiltered_data
+FASTA=/path/to/your/reference_genome.fasta
+
+# Align the alleles to the reference genome, 
+# and keep only biallelic records
+bcftools norm -f ${FASTA} -c ws \
+    ${DATASET}_chrfiltered.vcf.gz -Ou | \
+bcftools view -m 2 -M 2 \
+    -Oz -o ${DATASET}_refcorrected.vcf.gz
+
+# Replace the ID column with a CHR_POS_REF_ALT
+bcftools annotate \
+    --set-id '%CHROM\_%POS\_%REF\_%ALT' \
+    ${DATASET}_refcorrected.vcf.gz \
+    -Oz -o ${DATASET}_SNPID.vcf.gz
