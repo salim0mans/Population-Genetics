@@ -89,6 +89,9 @@ done
 
 ------Now we have a reference panel that is QCed and cleaned with its AF and summary for that------
 
+6-Generate a Panel-Sample-ID text file
 
+> bcftools query -l 1000GP_AF_chr22.vcf.gz \
+    > 1000GP_sample_IDs.txt
 
-
+7-I can transform my final panel files to .bref3 but it's optional (and didn't go well)
