@@ -38,7 +38,7 @@ done >> chr_names.txt
 #3.4
     bcftools view -i 'INFO/VT="SNP" | INFO/VT="INDEL"' -Ou | \
 #3.5
-    bcftools norm -f Homo_sapiens_assembly38.fasta -d none -Ou | \
+    bcftools norm -f hs37d5.fa -d none -Ou | \
 #3.6
     bcftools view -m 2 -M 2 -Ou | \
 #3.7
