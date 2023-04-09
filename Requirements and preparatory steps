@@ -1,8 +1,7 @@
 1-Determine the build of usage:
 
-I am obliged to compare my data over the GRCh37/hg19 genome build.. so I have to download it from Gencode (I chose the version 32 for some reason)
->> wget https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_32/GRCh37_mapping/GRCh37.primary_assembly.genome.fa.gz
->> GRCh37.primary_assembly.genome.fa.fai (can be generated through the samtool faidx) 
+I am obliged to compare my data over the GRCh37/hg19 genome build.. so I have to download it from the repo of 1kg 
+> wget http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/phase2_reference_assembly_sequence/hs37d5.fa.gz{,.fai}
 
 #######I WILL ONLY TRY MY TEST ON CHR20 AND CHR22 SO.... CHAGE {20,22} INTO {{1..22},X,Y} FOR ALL
 ------------------------------------------------------------------------------------------
