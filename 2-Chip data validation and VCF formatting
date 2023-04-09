@@ -214,3 +214,8 @@ bcftools view -e ID=@${DATASET}_exclusion2.txt \
 mv chrfiltered_data_for_phasinge.vcf.gz data_for_phasing.vcf.gz
 
 -------------------------Now we have a file of DATA for Phasing-------------------------
+
+If we want to apply some MASKING onto our data.... this step is the right one for it
+just make sure to do it neatly with bcftools not Tassel.. to maintain the file contents
+
+----------------------------------------------------------------------------------------
