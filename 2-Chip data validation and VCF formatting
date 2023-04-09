@@ -209,5 +209,8 @@ bcftools view -e ID=@${DATASET}_exclusion1.txt  \
 bcftools view -e ID=@${DATASET}_exclusion2.txt \
     ${DATASET}_exclusion1.vcf.gz \
     -Oz -o ${DATASET}_for_phasing.vcf.gz
+    
+##rename the final file for ease:
+mv chrfiltered_data_for_phasinge.vcf.gz data_for_phasing.vcf.gz
 
 -------------------------Now we have a file of DATA for Phasing-------------------------
