@@ -7,8 +7,7 @@ I am obliged to compare my data over the GRCh37/hg19 genome build.. so I have to
 ------------------------------------------------------------------------------------------
 2-Obtain the reference panel files
 
-The reference is the 1000GP, a reference file for each chromosome.
-
+I will take 1000G phase3 as an example
 > wget http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/ALL.chr{20,22}.phase3_shapeit2_mvncall_integrated_v5b.20130502.genotypes.vcf.gz{,.tbi}
 
 3-Minimum QC for the panel
