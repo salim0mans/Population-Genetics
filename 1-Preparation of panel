@@ -26,7 +26,7 @@ done >> chr_names.txt
   3.7-remove sites with missing data
 
 # Multiple processing commands piped together
-> for CHR in {20,22} X; do
+> for CHR in {20,22}; do
 #3.1
     bcftools annotate --rename-chrs chr_names.txt \
         ALL.chr${CHR}_GRCh38.genotypes.20170504.vcf.gz -Ou | \
