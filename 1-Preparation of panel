@@ -41,7 +41,7 @@ done >> chr_names.txt
 #3.6
     bcftools view -m 2 -M 2 -Ou | \
 #3.7
-    bcftools view -g ^miss -Oz -o 1000GP_chr${CHR}.vcf.gz"
+    bcftools view -g ^miss -Oz -o 1000GP_chr${CHR}.vcf.gz
 done
 
 ##I won't mention chrX or multiallelic options
