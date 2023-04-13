@@ -1,0 +1,38 @@
+In Impute5 directory, there are 3 tools:
+  -Impute5_Chunker
+  -Impute5_Converter
+  -Impute5
+
+Imputation requires the following steps by order:
+1-Chunking the files: each chromosome is divided into a small set of chunks (overlapping in the buffer
+regions).
+2-Converting the reference to .imp5
+3-Imputation of each chunk of data: running IMPUTE5 to impute each chunk of data independently
+4-Ligation: ligate each chunk of imputed data together in order to create one file per chromosome.
+To perform this, it is possible to use bcftools concat program.
+
+From the inside of Impute5 directory:
+^^^^^1-Chunking:
+
+>for CHR in {20,22}; do ./imp5Chunker_1.1.5_static --h reference.vcf.gz --g target.vcf.gz --r ${CHR} --o coordinates.txt; done
+
+#the output is a text file containing chunk info
+
+^^^^^2-Converting the ref:
+
+>for CHR in {20,22}; do ./imp5Converter_1.1.5_static --h reference.vcf.gz --r 20 --o reference.imp5; done
+
+#this results in a ref file in imp5 format with corresponding index (.idx file)
+
+######Note that converting works both ways
+
+^^^^^3-Imputation:
+#requires ref / input data / recombination genetic map / specify target region (chr) / output
+
+#Genetic maps are downloaded from this rep: https://github.com/odela
+
+>for CHR in {20,22}; do ./impute5_1.1.5_static --h chr${CHR}.p3.v5b.hg19.imp5 --m chr${CHR}.b37.gmap.gz --g target.vcf.gz --r 20:2000000-7000000 --o ${CHR}_imputed.vcf.gz
+
+^^^^^4-Ligation:
+I'm not sure If I need this for now.
+
