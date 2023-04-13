@@ -48,7 +48,7 @@ done
 
 4-Remove duplicate IDs:
 #Check for dublicates like:
->for CHR in {20,22}; do bcftools query -f '%ID\n' 1000GP_chr${CHR}.vcf.gz | uniq -d
+>for CHR in {20,22}; do bcftools query -f '%ID\n' 1000GP_chr${CHR}.vcf.gz | uniq -d; done
 ##if none, then none appear
 #for the whole step:
 >for CHR in {20,22}; do
