@@ -24,6 +24,7 @@ done >> chr_names.txt
   3.5-Align with reference genome to ensure that REF matches reference genome (and remove duplicate variants with -d none)
   3.6-remove multiallelic records
   3.7-remove sites with missing data
+  3.8-set IDs as CHR_POS_REF_ATL
 
 # Multiple processing commands piped together
 > for CHR in {20,22}; do
@@ -41,13 +42,15 @@ done >> chr_names.txt
 #3.6
     bcftools view -m 2 -M 2 -Ou | \
 #3.7
-    bcftools view -g ^miss -Oz -o 1000GP_chr${CHR}.vcf.gz
+    bcftools view -g ^miss -Ou | \
+#3.8
+    bcftools annotate --set-id '%CHROM\_%POS\_%REF\_%ALT' -Oz -o 1000GP_chr${CHR}.vcf.gz
 done
 
 ##I won't mention chrX or multiallelic options
 
 4-Remove duplicate IDs:
-#Check for dublicates like:
+#Check fohor dublicates like:
 >for CHR in {20,22}; do bcftools query -f '%ID\n' 1000GP_chr${CHR}.vcf.gz | uniq -d; done
 ##if none, then none appear
 #for the whole step:
