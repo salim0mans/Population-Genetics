@@ -11,7 +11,7 @@ Masking is an important method to check artificially the efficiency of imputatio
 >bcftools view -i  'F_MISSING < 0.1' -Oz -o final_masked_hg38.vcf.gz masked_5_filled.vcf.gz
 
 ###Better check the proportion filtered to determine best masking proportion. It is always better to remove a big number, but it shouldn't be too big (like 90% of all vars)
-##For my last exp. I used masking with 7%, 9%, and 11% as they filter 24%, 50%, and 73% respectively.. 
+##For my last exp. I used masking with 8%, 10%, and 12% as they filter 24%, 50%, and 73% respectively.. 
 
 >for CHR in {5..15}; do echo ${CHR}; bcftools view -i  'F_MISSING < 0.1' masked${CHR}_hg38.vcf.gz -Oz | bcftools query -f "%CHROM \n" | wc -l ; done
 
