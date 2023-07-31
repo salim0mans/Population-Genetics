@@ -15,4 +15,5 @@ C=$(zcat final.vcf.gz | grep -vc "#")
 E=$(expr $D - $C)
 echo "$P"
 bc <<< "scale=4; $E*100/$D"
+rm output.vcf.gz tagged.vcf.gz final.vcf.gz
 done < perc.txt
