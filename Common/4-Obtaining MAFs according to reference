@@ -1,0 +1,5 @@
+#For 3 masks (5,10,15) and 3 folds each
+for R in {5,10,15}; do for F in {1..3} ; do
+cut -d$'\t' -f2  XHRC_impute_${R}_${F}.vcf_per_variant_results.txt > ${R}${F}_clean.txt;
+sed -i "s/_/:/g" ${R}${F}_clean.txt; 
+bcftools query --include ID==@${R}${F}_clean.txt -f "%CHROM:%POS\t%INFO/MAF \n" XHRC_impute_${R}_${F}.vcf.gz > MAF_${R}_${F}.txt; done;done
