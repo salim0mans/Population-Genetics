@@ -8,7 +8,7 @@
 >bcftools +fill-tags masked_5.vcf.gz -Oz -- -t all | bcftools +fill-tags -o masked_5_filled.vcf.gz  -- -t F_MISSING
 
 3-An essential QC filter is to remove vars with call rate lower that 90% or 95%..we choose 90% so remove all missings over 10%:
->bcftools view -i  'F_MISSING>0.1' -Oz -o final_masked.vcf.gz masked_5_filled.vcf.gz
+>bcftools view -e  'F_MISSING>0.1' -Oz -o final_masked.vcf.gz masked_5_filled.vcf.gz
 
 ###Better check the proportion filtered to determine best masking proportion. It is always better to remove a big number, but it shouldn't be too big (like 90% of all vars)
 ##For my last exp. I used masking with 8%, 10%, and 12% as they filter 24%, 50%, and 73% respectively.. 
