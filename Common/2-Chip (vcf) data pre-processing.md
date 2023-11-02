@@ -29,13 +29,13 @@ Keep only those wanted chromosomes
     $ bcftools view -t $chrs renamed_chip.vcf.gz -Oz -o chrfiltered_chip.vcf.gz
   
 ### 3-QC of the chip  
-    3.1. Set the ID column as CHROM_POS_REF_ALT  
-    3.2. Align with reference genome to correct any flips  
-    3.3. Keep only bi-allelic records  
-    3.4. Remove duplicate samples, or overlapping ones with the panel  
-    3.5. Fill tags of AF, AC, F_MISSING, etc,.  
-    3.6. Exclude duplicate variants.
-    3.7. Set the minimum call rate (missing values), minimum AC, and minimum MAF (Recommended in general: exclude rare variant).  
+3.1. Set the ID column as CHROM_POS_REF_ALT  
+3.2. Align with reference genome to correct any flips  
+3.3. Keep only bi-allelic records  
+3.4. Remove duplicate samples, or overlapping ones with the panel  
+3.5. Fill tags of AF, AC, F_MISSING, etc,.  
+3.6. Exclude duplicate variants.
+3.7. Set the minimum call rate (missing values), minimum AC, and minimum MAF (Recommended in general: exclude rare variant).  
   
     $ bcftools annotate --set-id '%CHROM\_%POS\_%REF\_%ALT' chrfiltered_chip.vcf.gz -Oz -o SNPID_chip.vcf.gz #3.1    
     $ bcftools norm -f /path/to/hs37d5.fa -c ws SNPID_chip.vcf.gz -Oz | \ #3.2    
