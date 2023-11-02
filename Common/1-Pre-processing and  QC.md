@@ -53,25 +53,24 @@ https://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/  (downloadable with $ wget <
   
     $ for CHR in {1..22}; do  
 #3.1  
-    bcftools annotate --rename-chrs chr_names.txt \  
-        1000G_hg38_chr${CHR}.vcf.gz -Oz | \  
+    $ bcftools annotate --rename-chrs chr_names.txt 1000G_hg38_chr${CHR}.vcf.gz -Oz | \  
 #3.2  
-    bcftools view -e 'INFO/AC<3 | INFO/AN-INFO/AC<3 | INFO/MAF<0.01' -Oz | \  
+    $ bcftools view -e 'INFO/AC<3 | INFO/AN-INFO/AC<3 | INFO/MAF<0.01' -Oz | \  
 #3.3  
-    bcftools norm -m -any -Oz | \  
+    $ bcftools norm -m -any -Oz | \  
 #3.4   
     #(VT = variant type, it might be present int eh INFO field, but if not, maybe searching the INFO might help finding another tag for the same purpose. However if there is no such tag, then one might filter manually all complex variants by tracking a pattern in the ID, type, or INFO. For example, in some version of 1000G, there are CNVs and other variants that all have "[]" in their names or descriptive fields, hence I could filter them by knowing that)#  
   
-    bcftools view -i 'INFO/VT="SNP" | INFO/VT="INDEL"' -Oz | \   
+    $ bcftools view -i 'INFO/VT="SNP" | INFO/VT="INDEL"' -Oz | \   
 #3.5  
-    bcftools norm -f /Path/to/hs37d5.fa -d none -Oz | \  
+    $ bcftools norm -f /Path/to/hs37d5.fa -d none -Oz | \  
 #3.6  
-    bcftools view -m 2 -M 2 -Oz | \  
+    $ bcftools view -m 2 -M 2 -Oz | \  
 #3.7  
-    bcftools view -g ^miss -Oz | \  
+    $ bcftools view -g ^miss -Oz | \  
 #3.8  
-    bcftools annotate --set-id "%CHROM\_%POS\_%REF\_%ALT" -Oz -o QC_1000G_chr${CHR}.vcf.gz  
-done  
+    $ bcftools annotate --set-id "%CHROM\_%POS\_%REF\_%ALT" -Oz -o QC_1000G_chr${CHR}.vcf.gz  
+    done  
   
 4-Remove duplicate IDs:
 #Check and extract dublicates by a query of ID, followed by choosing only the lines that were repeated, then we put results in a text file and filter the data we have excluding the IDs in that file: 
