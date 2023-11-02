@@ -51,7 +51,7 @@ https://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/  (downloadable with $ wget <
   3.7-remove sites with missing data  
   3.8-set IDs as CHR_POS_REF_ATL  
   
-    $ for CHR in {1..22}; do \   
+    $ for CHR in {1..22}; do    
      bcftools annotate --rename-chrs chr_names.txt 1000G_hg38_chr${CHR}.vcf.gz -Oz | \  #3.1     
      bcftools view -e 'INFO/AC<3 | INFO/AN-INFO/AC<3 | INFO/MAF<0.01' -Oz | \ #3.2   
      bcftools norm -m -any -Oz | \  #3.3   
@@ -59,45 +59,47 @@ https://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/  (downloadable with $ wget <
      bcftools norm -f /Path/to/hs37d5.fa -d none -Oz | \  #3.5   
      bcftools view -m 2 -M 2 -Oz | \  #3.6    
      bcftools view -g ^miss -Oz | \  #3.7    
-     bcftools annotate --set-id "%CHROM\_%POS\_%REF\_%ALT" -Oz -o QC_1000G_chr${CHR}.vcf.gz \ #3.8  
+     bcftools annotate --set-id "%CHROM\_%POS\_%REF\_%ALT" -Oz -o QC_1000G_chr${CHR}.vcf.gz  #3.8  
      done  
   
 *(VT = variant type, it might be present int eh INFO field, but if not, maybe searching the INFO might help finding another tag for the same purpose. However if there is no such tag, then one might filter manually all complex variants by tracking a pattern in the ID, type, or INFO. For example, in some version of 1000G, there are CNVs and other variants that all have "[]" in their names or descriptive fields, hence I could filter them by knowing that)  
   
-4-Remove duplicate IDs:
-#Check and extract dublicates by a query of ID, followed by choosing only the lines that were repeated, then we put results in a text file and filter the data we have excluding the IDs in that file: 
+4-Remove duplicate IDs:  
 
-$ for CHR in {1..22}; do
-   bcftools query -f '%ID\n' QC_1000G_chr${CHR}.vcf.gz | \
-    sort | uniq -d > Dup_1000G_chr${CHR}.txt
-
-    if [[ -s Dup_1000G_chr${CHR}.txt ]]; then
-    	bcftools view -e ID=@Dup_1000G_chr${CHR}.txt \
-    	QC_1000G_chr${CHR}.vcf.gz \
-        -Oz -o filtered_1000G_chr${CHR}.vcf.gz
-    else 
-    	mv QC_1000G_chr${CHR}.vcf.gz filtered_1000G_chr${CHR}.vcf.gz
-    fi
-done
-
-5-Obtain Allele frequencies (AF) in the file. Then, extract all frequencies into a single file (let's call it ref_freq). It should have a column for IDs in the format CHR_POS_REF_ALT and an AF column. We concatenate all wanted chromosomes one by one in the same ref_freq file so it becomes inclusive.
-
-$ for CHR in {1..22}; do
-    bcftools +fill-tags filtered_1000G_chr${CHR}.vcf.gz -Oz -o AF_1000G_chr${CHR}.vcf.gz -- -t AF
-done
-
-$ echo -e 'CHR\tSNP\tREF\tALT\tAF' \
+Check and extract dublicates by a query of ID, followed by choosing only the lines that were repeated, then we put results in a text file and filter the data we have excluding the IDs in that file:   
+  
+    $ for CHR in {1..22}; do   
+    bcftools query -f '%ID\n' QC_1000G_chr${CHR}.vcf.gz | \  
+    sort | uniq -d > Dup_1000G_chr${CHR}.txt  
+  
+    if [[ -s Dup_1000G_chr${CHR}.txt ]]; then  
+    	bcftools view -e ID=@Dup_1000G_chr${CHR}.txt \  
+    	QC_1000G_chr${CHR}.vcf.gz \  
+        -Oz -o filtered_1000G_chr${CHR}.vcf.gz  
+    else   
+    	mv QC_1000G_chr${CHR}.vcf.gz filtered_1000G_chr${CHR}.vcf.gz  
+    fi  
+    done  
+  
+5-Obtain Allele frequencies (AF) in the file. Then, extract all frequencies into a single file (let's call it ref_freq). It should have a column for IDs in the format CHR_POS_REF_ALT and an AF column. We concatenate all wanted chromosomes one by one in the same ref_freq file so it becomes inclusive.  
+   
+    $ for CHR in {1..22}; do  
+    bcftools +fill-tags filtered_1000G_chr${CHR}.vcf.gz -Oz -o AF_1000G_chr${CHR}.vcf.gz -- -t AF  
+    done  
+  
+create the frequency file  
+    $ echo -e 'CHR\tSNP\tREF\tALT\tAF' \
     > ref_freq_1000G.txt
-
-# Query the required fields from the VCF file and append to the allele frequency file 
-$ for CHR in {1..22}; do
-    bcftools query -f '%CHROM\_%POS\_%REF\_%ALT\t%AF\n' AF_1000G_chr${CHR}.vcf.gz \
-    >> ref_freq_1000G.txt
-done
-
-6-Generate a Panel-Sample-ID text file (to compare with any tested data for possible overlapping in samples)
-
-$ bcftools query -l AF_1000G_chr1.vcf.gz > 1000G_SampleIDs.txt
-
-
+  
+Query the required fields from the VCF file and append to the allele frequency file  
+    $ for CHR in {1..22}; do  
+    bcftools query -f '%CHROM\_%POS\_%REF\_%ALT\t%AF\n' AF_1000G_chr${CHR}.vcf.gz \  
+    >> ref_freq_1000G.txt  
+    done  
+  
+6-Generate a Panel-Sample-ID text file (to compare with any tested data for possible overlapping in samples)  
+  
+    $ bcftools query -l AF_1000G_chr1.vcf.gz > 1000G_SampleIDs.txt  
+  
+  
 ------Now we have a reference panel that is Quality Controlled, along with its frequency table and Sample ID table------
