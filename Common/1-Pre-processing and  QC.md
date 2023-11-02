@@ -49,7 +49,7 @@ https://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/  (downloadable with $ wget \
   3.5-Align with reference genome to ensure that REF matches reference genome (and remove duplicate variants with -d none)  
   3.6-remove multiallelic records  
   3.7-remove sites with missing data  
-  3.8-set IDs as CHR_POS_REF_ATL  
+  3.8-set IDs as CHROM_POS_REF_ATL  
   
     $ for CHR in {1..22}; do    
      bcftools annotate --rename-chrs chr_names.txt 1000G_hg38_chr${CHR}.vcf.gz -Oz | \  #3.1     
@@ -87,11 +87,11 @@ Check and extract dublicates by a query of ID, followed by choosing only the lin
     bcftools +fill-tags filtered_1000G_chr${CHR}.vcf.gz -Oz -o AF_1000G_chr${CHR}.vcf.gz -- -t AF  
     done  
   
-create the frequency file  
+    #create the frequency file
     $ echo -e 'CHR\tSNP\tREF\tALT\tAF' \
     > ref_freq_1000G.txt
-  
-Query the required fields from the VCF file and append to the allele frequency file  
+ 
+    #Query the required fields from the VCF file and append to the allele frequency file  
     $ for CHR in {1..22}; do  
     bcftools query -f '%CHROM\_%POS\_%REF\_%ALT\t%AF\n' AF_1000G_chr${CHR}.vcf.gz \  
     >> ref_freq_1000G.txt  
