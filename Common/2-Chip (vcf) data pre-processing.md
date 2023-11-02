@@ -79,4 +79,4 @@ We should remove every excluded SNPs
     $ bcftools view -e ID=@Test_exclusion1.txt  QC_chip.vcf.gz | \  
     bcftools view -e ID=@Test_exclusion2.txt -Oz -o final_chip.vcf.gz
     
------------------Now we have a cleaned file of DATA, compatible with our 1000G panel, and ready for next steps---------------------
+-----------------Now we have a cleaned vcf data file, compatible with our 1000G panel, and ready for next steps---------------------
