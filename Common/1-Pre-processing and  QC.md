@@ -35,7 +35,7 @@ Other, more credible, reference panels are available with access restrictions, i
   
 We will take 1000G as an example.  
 Choose the preferred release (and pay attention to the build):  
-https://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/  (downloadable with $ wget <URL>)  
+https://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/  (downloadable with $ wget \<URL\>)  
   
 3-QC for the panel:  
   3.1-change names of chromosomes to make sure that they are consistent with the build. GRCh37 takes only 1..22,XY but GRCh38 takes chr1,chrX, etc.  
