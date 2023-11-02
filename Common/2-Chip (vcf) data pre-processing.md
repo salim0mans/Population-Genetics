@@ -56,7 +56,7 @@ Keep only those wanted chromosomes
     $ bcftools query -f '%CHROM\t%ID\t%REF\t%ALT\t%INFO/AF\n' QC_chip.vcf.gz \
     >> chip_freq.txt
 
-Compare AF in both chip and panel using an R script from (<a href="https://www.protocols.io/view/genotype-imputation-workflow-v3-0-e6nvw78dlmkj/v2">this workflow by Priit Palta et al.</a>)    
+Compare AF in both chip and panel using an R script from <a href="https://www.protocols.io/view/genotype-imputation-workflow-v3-0-e6nvw78dlmkj/v2">this workflow by Priit Palta et al.</a>     
 
 One can create an R file and copy the script within (the script is attached in the same "Scripts" repository under the name of "plot_AF_by_Plata.R")    
 
