@@ -20,13 +20,13 @@ make sure to index the vcf files upon each step with bcftools index -t \<file.vc
   
 -Extract and prepare files per Chr  
   
-  $ unzip plink.GRCh38.map.zip
-  $ mv plink.chrX.GRCh38.map plink.chr23.GRCh38.map
-  $ for CHR in {1..23}; do                             ## This command renames chromosomes in case of using hg38 only
-    cat plink.chr${CHR}.GRCh38.map | \
-    sed 's/^/chr/' \
-    > beagle_chr${CHR}_b38.map
-  done  
+  $ unzip plink.GRCh38.map.zip  
+  $ mv plink.chrX.GRCh38.map plink.chr23.GRCh38.map  
+  $ for CHR in {1..23}; do                             ## This command renames chromosomes in case of using hg38 only  
+    cat plink.chr${CHR}.GRCh38.map | \  
+    sed 's/^/chr/' \  
+    > beagle_chr${CHR}_b38.map  
+  done    
   
 -Data Imputation with Beagle.22Jul22.46e: 
   
