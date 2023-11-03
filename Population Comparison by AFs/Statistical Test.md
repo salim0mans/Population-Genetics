@@ -28,9 +28,9 @@ ac <- read_csv("final_AC.csv")
 ### Filter the rare variants 
 
 Exclude Any SNP that -in a particular population- satisfies:
-
+  
 $$ \frac{Total_{ALT}\times Total_{pop}}{Total_{alleles}} < 5 $$  
-
+  
 ```{r}
 
 df1_filter <- ac %>% dplyr::filter(!filter1 == "Rare")
@@ -44,6 +44,7 @@ For proportional categorical data, such as AFs, the common statistical tests for
 Starting with Z-test
 
 The equation is:  
+  
 $$ Z =\frac{p_1 - p_2}{\sqrt{p_{avg}\times(1-p_{avg})\times(\frac{1}{n_1}+\frac{1}{n_2})}} $$  
   
 For Chi-Square:
@@ -58,8 +59,9 @@ Consider the table:
 We make estimated proportions assuming that independence qualifies that any slot is a joint prob (intersection) can be resulted from just multiplying the marginal probs, and since it's a proportion, it is divided by total. e.g., A' = ((A+C)*(A+B))/total and so on.
 
 after making the estimates, we use the Chi-square test:
-
+  
 $$ X^2 = \sum \frac{(observed-expected)^2}{expected}  $$  
+
 Since we are comparing the two populations for Each SNP alone, then the df = (r-1)(c-1) = 1, the test is also two-tailed.
 
 
