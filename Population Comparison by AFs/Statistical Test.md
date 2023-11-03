@@ -94,8 +94,8 @@ df_tested <- df_tested  %>%  mutate(level_signif = ifelse(p_val_chi<0.001,paste0
 FDR is a necessity for multiple testing. We choose one of the most common algorithms for it, which is Benjamini-Hochberg.
   1-Order p-values from smallest to largest
   2-Add a column of Ranking (from 1 to N)
-  3-Apply the algorithm on each row as follows:
-$$ adj\_p = P\_val_i\times\frac{N}{i} $$
+  3-Apply the algorithm on each row as follows:  
+                                          $$ adj\_p = P\_val_i\times\frac{N}{i} $$
 
 
 ```{r}
