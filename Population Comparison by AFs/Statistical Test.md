@@ -95,6 +95,8 @@ FDR is a necessity for multiple testing. We choose one of the most common algori
   1-Order p-values from smallest to largest
   2-Add a column of Ranking (from 1 to N)
   3-Apply the algorithm on each row as follows:  
+  $$ \frac{Total_{ALT}\times Total_{pop}}{Total_{alleles}} < 5 $$
+
                                           $$ adj\_p = P\_val_i\times\frac{N}{i} $$
 
 
