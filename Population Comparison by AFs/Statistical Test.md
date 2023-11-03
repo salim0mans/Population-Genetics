@@ -42,8 +42,8 @@ For proportional categorical data, such as AFs, the common statistical tests for
 
 Starting with Z-test
 
-The equation is: 
-$$Z =\frac{p_1 - p_2}{\sqrt{p_{avg}\times(1-p_{avg})\times(\frac{1}{n_1}+\frac{1}{n_2})}}$$
+The equation is:  
+$$ Z =\frac{p_1 - p_2}{\sqrt{p_{avg}\times(1-p_{avg})\times(\frac{1}{n_1}+\frac{1}{n_2})}} $$  
 For Chi-Square:
 Consider the table:
 
@@ -57,7 +57,7 @@ We make estimated proportions assuming that independence qualifies that any slot
 
 after making the estimates, we use the Chi-square test:
 
-$$ X^2 = \sum \frac{(observed-expected)^2}{expected}$$
+$$ X^2 = \sum \frac{(observed-expected)^2}{expected}  $$  
 Since we are comparing the two populations for Each SNP alone, then the df = (r-1)(c-1) = 1, the test is also two-tailed.
 
 
@@ -95,9 +95,8 @@ FDR is a necessity for multiple testing. We choose one of the most common algori
   1-Order p-values from smallest to largest
   2-Add a column of Ranking (from 1 to N)
   3-Apply the algorithm on each row as follows:  
-  $$ \frac{Total_{ALT}\times Total_{pop}}{Total_{alleles}} < 5 $$
-
-                                          $$ adj\_p = P\_val_i\times\frac{N}{i} $$
+  
+$$ adj\_p = P\_val_i\times\frac{N}{i} $$  
 
 
 ```{r}
