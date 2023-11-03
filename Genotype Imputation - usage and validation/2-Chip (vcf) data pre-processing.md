@@ -58,7 +58,7 @@ Keep only those wanted chromosomes
 
 Compare AF in both chip and panel using an R script from <a href="https://www.protocols.io/view/genotype-imputation-workflow-v3-0-e6nvw78dlmkj/v2">this workflow by Priit Palta et al.</a>     
 
-One can create an R file and copy the script within (the script is attached in the same "Scripts" repository under the name of "plot_AF_by_Plata.R")    
+One can create an R file and copy the script within (the script is attached in the same "Scripts" directory under the name of "plot_AF_by_Plata.R")    
 
     $ touch plot_AF.R     
     $ nano plot_AF.R      #then copy the contents     
