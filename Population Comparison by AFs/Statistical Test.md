@@ -27,7 +27,8 @@ ac <- read_csv("final_AC.csv")
 
 ### Filter the rare variants 
 
-Exclude Any SNP that -in a particular population- satisfies: $$ \frac{Total_{ALT}\times Total_{pop}}{Total_{alleles}} < 5 $$  
+Exclude Any SNP that -in a particular population- satisfies: 
+$$ \frac{Total_{ALT}\times Total_{pop}}{Total_{alleles}} < 5 $$  
   
 ```{r}
 
@@ -41,7 +42,8 @@ For proportional categorical data, such as AFs, the common statistical tests for
 
 Starting with Z-test
 
-The equation is: $$ Z =\frac{p_1 - p_2}{\sqrt{p_{avg}\times(1-p_{avg})\times(\frac{1}{n_1}+\frac{1}{n_2})}} $$  
+The equation is: 
+$$ Z =\frac{p_1 - p_2}{\sqrt{p_{avg}\times(1-p_{avg})\times(\frac{1}{n_1}+\frac{1}{n_2})}} $$  
   
 For Chi-Square:
 Consider the table:
