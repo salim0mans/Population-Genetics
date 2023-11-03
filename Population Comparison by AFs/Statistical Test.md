@@ -27,9 +27,7 @@ ac <- read_csv("final_AC.csv")
 
 ### Filter the rare variants 
 
-Exclude Any SNP that -in a particular population- satisfies:
-  
-$$ \frac{Total_{ALT}\times Total_{pop}}{Total_{alleles}} < 5 $$  
+Exclude Any SNP that -in a particular population- satisfies: $$ \frac{Total_{ALT}\times Total_{pop}}{Total_{alleles}} < 5 $$  
   
 ```{r}
 
@@ -56,9 +54,7 @@ Consider the table:
 
 We make estimated proportions assuming that independence qualifies that any slot is a joint prob (intersection) can be resulted from just multiplying the marginal probs, and since it's a proportion, it is divided by total. e.g., A' = ((A+C)*(A+B))/total and so on.
 
-after making the estimates, we use the Chi-square test:
-  
-$$ X^2 = \sum \frac{(observed-expected)^2}{expected}  $$  
+after making the estimates, we use the Chi-square test: $$ X^2 = \sum \frac{(observed-expected)^2}{expected}  $$  
 
 Since we are comparing the two populations for Each SNP alone, then the df = (r-1)(c-1) = 1, the test is also two-tailed.
 
