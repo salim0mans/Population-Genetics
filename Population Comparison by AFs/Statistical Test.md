@@ -27,8 +27,7 @@ ac <- read_csv("final_AC.csv")
 
 ### Filter the rare variants 
 
-Exclude Any SNP that -in a particular population- satisfies: 
-$$ \frac{Total_{ALT}\times Total_{pop}}{Total_{alleles}} < 5 $$  
+Exclude Any SNP that -in a particular population- satisfies:  $$ \frac{Total_{ALT}\times Total_{pop}}{Total_{alleles}} < 5 $$  
   
 ```{r}
 
