@@ -24,6 +24,8 @@ Most tasks are performed in a linux environment (with Unix bash script).
   
 ## Pipeline  
   
+make sure to index the vcf files upon each step with bcftools index -t \<file.vcf.gz\>  
+    
 ### 1-Determine the genomic build (assembly) of usage:  
 One might need two builds: hs37d5.fa (hg19) and the Homo_sapiens.GRCh38.fa assembly (hg38), because some tasks require software and servers that currently have the hg19 only (and vice versa). However, if the task involves only quick imputation, hg38 is preferred.  
   

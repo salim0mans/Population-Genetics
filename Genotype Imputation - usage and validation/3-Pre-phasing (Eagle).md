@@ -7,6 +7,8 @@ Phasing is a preparatory step for imputation, where genotypes undergo alignment 
 There are few well-known phasing software available publically, including Eagle, SHAPEIT, and Beagle (phasing and imputation software).  
 We will perform phasing with Eagle in this guide.   
     
+make sure to index the vcf files upon each step with bcftools index -t \<file.vcf.gz\>  
+  
 ### 1-Download and install requirements
   
 Eagle, along with the genetic maps of hg19 and hg38 assemblies are available on <a href="https://alkesgroup.broadinstitute.org/Eagle/downloads/">this site</a>.  

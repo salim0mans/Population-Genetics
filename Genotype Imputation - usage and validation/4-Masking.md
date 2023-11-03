@@ -11,6 +11,8 @@ One important point to consider is that even using a random exclusive sampling d
 Cross-validation considers basically repeating the masking procedure multiple times using different seeds, so at best scenario, a sufficent combinations of masked variants being tested, and contribute to a mean value that represents the whole procedure better.    
 
 ## Procedures genotype masking  
+  
+make sure to index the vcf files upon each step with bcftools index -t \<file.vcf.gz\>  
 
 ### Use shuf command    
 
