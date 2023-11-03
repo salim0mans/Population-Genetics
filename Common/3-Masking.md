@@ -22,8 +22,8 @@ Finally, we exclude the random sampled ids from the original vcf file using bcft
    
 * Single file masking: requires the input of filename prefix and percentage of random masking   
 * Parallel file masking: requires the use of "parallel" package putting filename list as the first argument and percentages as the second.  
-  
-    $ parallel ./parallel_shuf_masking.sh ::: file1 file2 file3 ::: $(seq 5 5 25) ::: $(seq 1 10) ## 3 files masked by percentages 5 10 15 20 25, 10 times (10-fold validation)   
+
+$ parallel ./parallel_shuf_masking.sh ::: file1 file2 file3 ::: $(seq 5 5 25) ::: $(seq 1 10) ## 3 files masked by percentages 5 10 15 20 25, 10 times (10-fold validation)   
     
 As mentioned before, it is highly recommended to perform the task multiple times 
   
