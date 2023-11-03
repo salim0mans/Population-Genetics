@@ -29,7 +29,8 @@ ac <- read_csv("final_AC.csv")
 
 Exclude Any SNP that -in a particular population- satisfies:
 
-$$ \frac{Total_{ALT}\times Total_{pop}}{Total_{alleles}} < 5 $$
+$$ \frac{Total_{ALT}\times Total_{pop}}{Total_{alleles}} < 5 $$  
+
 ```{r}
 
 df1_filter <- ac %>% dplyr::filter(!filter1 == "Rare")
@@ -44,6 +45,7 @@ Starting with Z-test
 
 The equation is:  
 $$ Z =\frac{p_1 - p_2}{\sqrt{p_{avg}\times(1-p_{avg})\times(\frac{1}{n_1}+\frac{1}{n_2})}} $$  
+  
 For Chi-Square:
 Consider the table:
 
