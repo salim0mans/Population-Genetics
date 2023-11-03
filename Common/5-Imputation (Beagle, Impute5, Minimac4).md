@@ -30,7 +30,7 @@ Extract and prepare files per Chr
   
 Data Imputation with Beagle.22Jul22.46e: 
   
-  $ for R in {5,10,15}; do for F in {1..10}; do for CHR in {1..22}; do        #Proceeding with our example with 3 masks and 10 folds.   
+  {$ for R in {5,10,15}; do for F in {1..10}; do for CHR in {1..22}; do        #Proceeding with our example with 3 masks and 10 folds.   
     java -Xmx16g \
       -jar beagle.22Jul22.46e.jar \
         gt=Masked_phased_chip_${R}_${F}.vcf.gz \
@@ -43,7 +43,7 @@ Data Imputation with Beagle.22Jul22.46e:
         impute=true \
         gp=false \
         seed=-99999 
-  done;done;done  
+  done;done;done}  
   
   
 ### 2-Minimac4  
