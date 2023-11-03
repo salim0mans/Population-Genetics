@@ -18,7 +18,7 @@ We can take all IDs from the vcf file by bcftools query, and execute shuffle com
 Then, calculate the number of variants to mask according to the masking percentage, and then apply the number of shuffled sample of IDs equal to that number and save this random sample of IDs into a new text file.     
 Finally, we exclude the random sampled ids from the original vcf file using bcftools view -e     
   
-*The masking code is available as bash scripts under the names of "single_file_shuf_masking.sh" and "parallel_file_shuf_masking.sh" in the "Scripts" directory.     
+*The masking code is available as bash scripts under the names of "single_shuf_masking.sh" and "parallel_file_shuf_masking.sh" in the "Scripts" directory.     
    
 *Single file masking: requires the input of filename prefix and percentage of random masking   
 *Parallel file masking: requires the use of "parallel" package putting filename list as the first argument and percentages as the second.  
