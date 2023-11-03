@@ -44,6 +44,7 @@ For proportional categorical data, such as AFs, the common statistical tests for
 Starting with Z-test
 
 The equation is: 
+
 $$ Z =\frac{p_1 - p_2}{\sqrt{p_{avg}\times(1-p_{avg})\times(\frac{1}{n_1}+\frac{1}{n_2})}} $$  
   
 For Chi-Square:
