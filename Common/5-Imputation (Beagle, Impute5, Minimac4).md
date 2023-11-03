@@ -18,7 +18,7 @@ make sure to index the vcf files upon each step with bcftools index -t \<file.vc
   
 -Get the genetic map for beagle (choose correct build) from <a href="https://bochet.gcc.biostat.washington.edu/beagle/genetic_maps/">this site</a>.  
   
--Extract and prepare files per Chr  
+Extract and prepare files per Chr  
   
   $ unzip plink.GRCh38.map.zip  
   $ mv plink.chrX.GRCh38.map plink.chr23.GRCh38.map  
@@ -28,7 +28,7 @@ make sure to index the vcf files upon each step with bcftools index -t \<file.vc
     > beagle_chr${CHR}_b38.map  
   done    
   
--Data Imputation with Beagle.22Jul22.46e: 
+Data Imputation with Beagle.22Jul22.46e: 
   
   $ for R in {5,10,15}; do for F in {1..10}; do for CHR in {1..22}; do        #Proceeding with our example with 3 masks and 10 folds.   
     java -Xmx16g \
