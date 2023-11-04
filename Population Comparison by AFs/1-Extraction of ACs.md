@@ -1,4 +1,4 @@
-# Extraction of AFs from imputed files  
+# Extraction of ACs from imputed files  
 
 ## Introduction  
   
