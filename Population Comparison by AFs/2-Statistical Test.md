@@ -1,5 +1,5 @@
 ---
-title: "Allele Frequency Comparison between Tatar and Yakut Populations according to T2D associated Variants"
+title: "Allele Frequency Comparison between pop1 and pop2 Populations according to T2D associated Variants"
 author: "Saleem Mansour"
 date: "2023-10-24"
 output:
@@ -52,8 +52,8 @@ Consider the table:
 
                                         |       | REF | ALT |       |
                                         |-------|-----|-----|-------|
-                                        | Tatar | A   | B   | A+B   |
-                                        | Yakut | C   | D   | C+D   |
+                                        | pop1  | A   | B   | A+B   |
+                                        | pop2  | C   | D   | C+D   |
                                         |       | A+C | B+D | Total |
 
 We make estimated proportions assuming that independence qualifies that any slot is a joint prob (intersection) can be resulted from just multiplying the marginal probs, and since it's a proportion, it is divided by total. e.g., A' = ((A+C)*(A+B))/total and so on.
@@ -85,9 +85,9 @@ chi_sqr_v <- Vectorize(chi_sqr)
 ```
 ### Performing tests
 ```{r}
-## The total number of alleles is 2*sample_number, 88*2 for Tatars, and 84*2 for Yakuts
-df_tested <- df1_filter %>% mutate(p_val_z = z_test_v(ALT_Tatar,ALT_Yakut,176,168))
-df_tested <- df_tested %>% mutate(p_val_chi = chi_sqr_v(ALT_Tatar,REF_Tatar,ALT_Yakut,REF_Yakut))
+## The total number of alleles is 2*sample_number, 88*2 for pop1, and 84*2 for pop2
+df_tested <- df1_filter %>% mutate(p_val_z = z_test_v(ALT_pop1,ALT_pop2,176,168))
+df_tested <- df_tested %>% mutate(p_val_chi = chi_sqr_v(ALT_pop1,REF_pop1,ALT_pop2,REF_pop2))
 df_tested <- df_tested  %>%  mutate(level_signif = ifelse(p_val_chi<0.001,paste0("***"),
                                                    ifelse(p_val_chi<0.01,paste0("**"),
                                                    ifelse(p_val_chi<0.05,paste0("*"),paste0("ns")))))
@@ -121,18 +121,18 @@ df_final_adj <- df_adjust[-c(6,10)]
 ```{r}
 # Considering only significant variants:
 ## Adding the difference of MAF as a percentage
-df_final_adj <- df_final_adj %>%  mutate(MAF_Tatar = (ALT_Tatar/176))
-df_final_adj <- df_final_adj %>%  mutate(MAF_Yakut = (ALT_Yakut/168))
+df_final_adj <- df_final_adj %>%  mutate(MAF_pop1 = (ALT_pop1/176))
+df_final_adj <- df_final_adj %>%  mutate(MAF_pop2 = (ALT_pop2/168))
 
 df_final <- df_final_adj %>% mutate( Dif = ifelse(!adj_signif == "ns",
-                                                  round(abs(MAF_Tatar - MAF_Yakut)*100,5), paste0("--")))
+                                                  round(abs(MAF_pop1 - MAF_pop2)*100,5), paste0("--")))
 ## Adding the folds of change in MAF
 df_final <- df_final %>% mutate( fc = ifelse(!adj_signif == "ns",
-                                                 ifelse(MAF_Tatar>=MAF_Yakut,round(MAF_Tatar/MAF_Yakut,2),round(MAF_Yakut/MAF_Tatar,2)), paste0("--")))
+                                                 ifelse(MAF_pop1>=MAF_pop2,round(MAF_pop1/MAF_pop2,2),round(MAF_pop2/MAF_pop1,2)), paste0("--")))
 
 ## Adding the name of the population with the higher MAF (for ease of following)
 df_final <- df_final %>% mutate("Higher MAF" = ifelse(!adj_signif == "ns", 
-                                               ifelse(MAF_Tatar>MAF_Yakut,paste0("Tatar"),paste0("Yakut")),paste0("--")))
+                                               ifelse(MAF_pop1>MAF_pop2,paste0("pop1"),paste0("pop2")),paste0("--")))
 ## Adding a value that take in count both  Difference% and Fold Change and highly correlated with significant p-values
 df_final <- df_final %>% mutate(GDV = ifelse(!adj_signif == "ns",as.numeric(Dif)*as.numeric(Dif)*log10(as.numeric(fc)),paste0("--")))
 ```
@@ -151,7 +151,7 @@ write.csv(df_final,"Final_AF_Comparison_Report.csv")
 
 ```{r, warning=FALSE}
 df_long <- df_final %>%
-  gather(key = "pop", value = "MAF", MAF_Tatar, MAF_Yakut)
+  gather(key = "pop", value = "MAF", MAF_pop1, MAF_pop2)
 
 df_signif <- df_tested %>% filter()
 
@@ -161,17 +161,17 @@ g1 <- ggplot(df_long, aes(x=SNP, y=MAF,fill=pop))+
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
 ggsave("MAF_pop.png",g1,width = 12000, height = 2000, units = "px", type = "cairo", dpi = 300)
 
-g2 <- ggplot(df_final, aes(x=SNP, y=MAF_Tatar,fill=adj_signif))+
+g2 <- ggplot(df_final, aes(x=SNP, y=MAF_pop1,fill=adj_signif))+
   geom_bar(stat = "identity", position = "dodge")+
   theme_bw()+
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))+
   scale_fill_manual(values = c("#f2a90c", "yellow","#24820d","#aba9a9"))
-ggsave("MAF_Tatar_signif.png",g2,width = 12000, height = 2000, units = "px", type = "cairo", dpi = 300)
+ggsave("MAF_pop1_signif.png",g2,width = 12000, height = 2000, units = "px", type = "cairo", dpi = 300)
 
-g3 <- ggplot(df_final, aes(x=SNP, y=MAF_Yakut,fill=adj_signif))+
+g3 <- ggplot(df_final, aes(x=SNP, y=MAF_pop2,fill=adj_signif))+
   geom_bar(stat = "identity", position = "dodge")+
   theme_bw()+
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))+
   scale_fill_manual(values = c("#f2a90c", "yellow","#24820d","#aba9a9"))
-ggsave("MAF_Yakut_signif.png",g3,width = 12000, height = 2000, units = "px", type = "cairo", dpi = 300)
+ggsave("MAF_pop2_signif.png",g3,width = 12000, height = 2000, units = "px", type = "cairo", dpi = 300)
 ```
