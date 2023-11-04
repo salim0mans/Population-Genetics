@@ -24,6 +24,8 @@ library(readxl)
 af <- read_excel("final_AF.xlsx")
 ac <- read_csv("final_AC.csv")
 ```
+  
+Let's assume that our first file (pop1) has 88 samples (176 alleles), and second file (pop2) has 84 samples (168 alleles).   
 
 ### Filter the rare variants 
 
