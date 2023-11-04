@@ -20,8 +20,8 @@ A measure that considers both precision and sensitivity. It is represented by th
 ### Calculating accuracy metrics  
   
 There are different tools to calculate metrics, some are built-in within imputation software (mostly R^2 and Dosage R^2), and others are standalone scripts that are publicly available.  
-- Imputation Accuracy Calculator by TorkamaniLab (github), <a href="https://github.com/TorkamaniLab/imputation_accuracy_calculator">found here</a>.  
-- Hap.py calculator by Illumina (github), <a href="https://github.com/Illumina/hap.py/blob/master/doc/happy.md">found here</a>.  
+- Imputation Accuracy Calculator by TorkamaniLab (github), <a href="https://github.com/TorkamaniLab/imputation_accuracy_calculator">can be found here</a>.  
+- Hap.py calculator by Illumina (github), <a href="https://github.com/Illumina/hap.py/blob/master/doc/happy.md">can be found here</a>.  
   
 ### 1-Imputation Accuracy Calculator  
 This tools needs the following inputs: the imputed file to be tested, the masked input file for imputation, named genotype array (GA), and a whole genome sequencing file (WGS) to represent the ground truth reference of comparison.  
