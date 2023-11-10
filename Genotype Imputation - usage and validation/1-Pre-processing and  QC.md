@@ -93,7 +93,7 @@ Then, extract all frequencies into a single file (let's call it ref_freq). It sh
  
     #Query the required fields from the VCF file and append to the allele frequency file  
     $ for CHR in {1..22}; do  
-    bcftools query -f '%CHROM\_%POS\_%REF\_%ALT\t%AF\n' final_1000G_chr${CHR}.vcf.gz \  
+    bcftools query -f '%CHROM\t_%POS\t_%REF\t_%ALT\t%AF\n' final_1000G_chr${CHR}.vcf.gz \  
     >> ref_freq_1000G.txt  
     done  
   
