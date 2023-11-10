@@ -65,7 +65,7 @@ One can create an R file and copy the script within (the script is attached in t
 
 Now execute the file considering the args in the following order (chip_freq file path, prefix of output, ref_freq file path, maximum AF difference, maximum fold change):     
   
-    $ Rscript --no-save /path/to/plot_AF.R chip_freq.tdt Test path/to/ref_freq_1000G.txt 0.1 5  
+    $ Rscript --no-save /path/to/plot_AF.R chip_freq.txt Test path/to/ref_freq_1000G.txt 0.1 5  
     
 The output must include text files of excluded SNPs due to mismatch, unavailable SNPs, or very different AF, accompanied with a plot.   
 
