@@ -16,8 +16,8 @@ panel <- fread(ref_panel, header = TRUE)
 
 # Take an intersection of the panel and chip data 
 # based on SNP column (in format CHR_POS_REF_ALT)
-isec <- merge(panel, chip, by = c("CHR", "SNP", "REF", "ALT"))
-colnames(isec)[c(5,6)] <- c("AF_PANEL", "AF_CHIP")
+isec <- merge(panel, chip, by = c("SNP"))
+colnames(isec)[c(2,3)] <- c("AF_PANEL", "AF_CHIP")
 
 isec$AF_diff <- abs(isec$AF_PANEL - isec$AF_CHIP)
 isec$AF_ratio <- isec$AF_CHIP/isec$AF_PANEL
