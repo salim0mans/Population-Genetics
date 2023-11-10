@@ -53,7 +53,7 @@ Keep only those wanted chromosomes
 
     $ echo -e 'CHR\tSNP\tREF\tALT\tAF' \   #Generate a frequency table (chip_freq) for the chip     
     > chip_freq.txt     
-    $ bcftools query -f '%CHROM\t%ID\t%REF\t%ALT\t%INFO/AF\n' QC_chip.vcf.gz \
+    $ bcftools query -f '%CHROM\t%ID\t%REF\t%ALT\t%AF\n' QC_chip.vcf.gz \
     >> chip_freq.txt
 
 Compare AF in both chip and panel using an R script from <a href="https://www.protocols.io/view/genotype-imputation-workflow-v3-0-e6nvw78dlmkj/v2">this workflow by Priit Palta et al.</a>     
