@@ -45,9 +45,9 @@ Keep only those wanted chromosomes
     $ bcftools query -l corrected_chip.vcf.gz | uniq -d >> duplicate_sample_IDs.txt    
     $ cat path/to/1000G_SampleIDs.txt >> duplicate_sample_IDs.txt   
     $ bcftools view -S ^duplicate_sample_IDs.txt --force-samples corrected_chip.vcf.gz -Oz | \  
-     bcftools +fill-tags -Oz -- -t AC,AN,AF | \    #3.5    
+     bcftools +fill-tags -Oz -- -t AC,AN,AF,F_MISSING | \    #3.5    
      bcftools norm -d none -Oz | \     #3.6    
-     bcftools view -e 'INFO/AC<3 | (INFO/AN-INFO/AC)<3 | INFO/MAF<0.01' -Oz -o QC_chip.vcf.gz   #3.7   
+     bcftools view -e 'INFO/AC<3 | (INFO/AN-INFO/AC)<3 | INFO/MAF<0.01 | F_MISSING > 0.1' -Oz -o QC_chip.vcf.gz   #3.7   
 
 ### 4-Match variants for presence and allele frequency between the panel and the chip  
 
