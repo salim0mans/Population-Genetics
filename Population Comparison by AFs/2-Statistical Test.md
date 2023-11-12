@@ -84,15 +84,25 @@ chi_sqr <- function(x1a,x1r,x2a,x2r){
 }
 
 chi_sqr_v <- Vectorize(chi_sqr)
+
+fisher_exact <- function(x1a,x1r,x2a,x2r){
+  obs <- matrix(c(x1a, x1r, x2a, x2r), nrow = 2, ncol = 2, byrow = T)
+  f <- fisher.test(obs)
+  return(f$p.value)
+}
+
+fisher_exact_v <- Vectorize(fisher_exact)
+
 ```
 ### Performing tests
 ```{r}
 ## The total number of alleles is 2*sample_number, 88*2 for pop1, and 84*2 for pop2
 df_tested <- df1_filter %>% mutate(p_val_z = z_test_v(ALT_pop1,ALT_pop2,176,168))
 df_tested <- df_tested %>% mutate(p_val_chi = chi_sqr_v(ALT_pop1,REF_pop1,ALT_pop2,REF_pop2))
-df_tested <- df_tested  %>%  mutate(level_signif = ifelse(p_val_chi<0.001,paste0("***"),
-                                                   ifelse(p_val_chi<0.01,paste0("**"),
-                                                   ifelse(p_val_chi<0.05,paste0("*"),paste0("ns")))))
+df_tested <- df_tested %>% mutate(p_val_fisher = fisher_exact_v(ALT_pop1,REF_pop1,ALT_pop2,REF_pop2))
+df_tested <- df_tested  %>%  mutate(level_signif = ifelse(p_val_fisher<0.001,paste0("***"),
+                                                   ifelse(p_val_fisher<0.01,paste0("**"),
+                                                   ifelse(p_val_fisher<0.05,paste0("*"),paste0("ns")))))
 ```
 
 ### Adjust multiple testing (BH FDR)
@@ -106,14 +116,13 @@ $$ adj\_p = P\_val_i\times\frac{N}{i} $$
 
 
 ```{r}
-df_adjust <- df_tested[order(df_tested$p_val_chi, decreasing = F),]
+df_adjust <- df_tested[order(df_tested$p_val_fisher, decreasing = F),]
 v1 <-  seq(1,length(df_adjust$SNP))
 df_adjust$rank <- v1
 df_adjust <- df_adjust %>% mutate(p_val_adj = p_val_chi*length(df_adjust$SNP)/rank)
 df_adjust <- df_adjust  %>%  mutate(adj_signif = ifelse(p_val_adj<0.001,paste0("***"),
                                                    ifelse(p_val_adj<0.01,paste0("**"),
                                                    ifelse(p_val_adj<0.05,paste0("*"),paste0("ns")))))
-df_final_adj <- df_adjust[-c(6,10)]
 ```
 
 
@@ -123,7 +132,7 @@ df_final_adj <- df_adjust[-c(6,10)]
 ```{r}
 # Considering only significant variants:
 ## Adding the difference of MAF as a percentage
-df_final_adj <- df_final_adj %>%  mutate(MAF_pop1 = (ALT_pop1/176))
+df_final_adj <- df_adjust %>%  mutate(MAF_pop1 = (ALT_pop1/176))
 df_final_adj <- df_final_adj %>%  mutate(MAF_pop2 = (ALT_pop2/168))
 
 df_final <- df_final_adj %>% mutate( Dif = ifelse(!adj_signif == "ns",
