@@ -23,10 +23,10 @@ library(Barnard)
 ## Preparaion
 ```{r,echo=FALSE,include=FALSE}
 
-ac <- read_csv("AC_case-controls_chech.csv")
+ac <- read_csv("AC_case-controls.csv")
 # this information of sample count is obtained from the original vcf files by bcftools query -l <file> | wc -l 
-ctl_len = 57*2
-t2d_len = 28*2
+ctl_len = X    # replace X with number of samples in the group * 2
+t2d_len = Y    # replace Y with number of samples in the group * 2
 df1 = ac %>% mutate(ctl_ALT = Mean_x)
 df1 = df1 %>% mutate(ctl_REF = ctl_len-Mean_x)
 df1 = df1 %>% mutate(t2d_ALT = Mean_y)
@@ -173,8 +173,8 @@ df_adjust <- df_adjust  %>%  mutate(adj_signif = ifelse(p_val_adj<0.001,paste0("
                                                    ifelse(p_val_adj<0.01,paste0("**"),
                                                    ifelse(p_val_adj<0.05,paste0("*"),paste0("--")))))
 
-df_adjust <- df_adjust %>%  mutate(Chechen_ctl = (ctl_ALT/ctl_len))
-df_adjust <- df_adjust %>%  mutate(Chechen_t2d = (t2d_ALT/t2d_len))
+df_adjust <- df_adjust %>%  mutate(cohort_ctl = (ctl_ALT/ctl_len))
+df_adjust <- df_adjust %>%  mutate(cohort_t2d = (t2d_ALT/t2d_len))
 ```
 
 
@@ -190,40 +190,40 @@ df_adjust <- df_adjust  %>%  mutate(adj_signif = ifelse(p_val_adj<0.001,paste0("
                                                    ifelse(p_val_adj<0.01,paste0("**"),
                                                    ifelse(p_val_adj<0.05,paste0("*"),paste0("--")))))
 
-df_adjust <- df_adjust %>%  mutate(Chechen_ctl = (ctl_ALT/ctl_len))
-df_adjust <- df_adjust %>%  mutate(Chechen_t2d = (t2d_ALT/t2d_len))
+df_adjust <- df_adjust %>%  mutate(cohort_ctl = (ctl_ALT/ctl_len))
+df_adjust <- df_adjust %>%  mutate(cohort_t2d = (t2d_ALT/t2d_len))
 ```
 
 
 ## plotting AF comparison
 ```{r, warning=FALSE}
 df_long <- df_adjust %>%
-  gather(key = "case", value = "MAF", Chechen_ctl, Chechen_t2d)
+  gather(key = "case", value = "MAF", cohort_ctl, cohort_t2d)
 
 g1 <- ggplot(df_long, aes(x=SNP, y=MAF,fill=case))+
   geom_bar(stat = "identity", position = "dodge")+
   theme_bw()+
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
-ggsave("Chechen_case-control_snps.png",g1,width = 12000, height = 2000, units = "px", type = "cairo", dpi = 300)
+ggsave("cohort_case-control_snps.png",g1,width = 12000, height = 2000, units = "px", type = "cairo", dpi = 300)
 
-g2 <- ggplot(df_adjust, aes(x=SNP, y=Chechen_ctl,fill=adj_signif))+
+g2 <- ggplot(df_adjust, aes(x=SNP, y=cohort_ctl,fill=adj_signif))+
   geom_bar(stat = "identity", position = "dodge")+
   theme_bw()+
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))+
   scale_fill_manual(values = c("#aba9a9","#fa6b7e", "#fa6bdd","#726bfa"))
-ggsave("Chechen_ctl_snps.png",g2,width = 12000, height = 2000, units = "px", type = "cairo", dpi = 300)
+ggsave("cohort_ctl_snps.png",g2,width = 12000, height = 2000, units = "px", type = "cairo", dpi = 300)
 
-g3 <- ggplot(df_adjust, aes(x=SNP, y=Chechen_t2d,fill=adj_signif))+
+g3 <- ggplot(df_adjust, aes(x=SNP, y=cohort_t2d,fill=adj_signif))+
   geom_bar(stat = "identity", position = "dodge")+
   theme_bw()+
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))+
   scale_fill_manual(values = c("#aba9a9","#fa6b7e", "#fa6bdd","#726bfa"))
-ggsave("Chechen_t2d_snps.png",g3,width = 12000, height = 2000, units = "px", type = "cairo", dpi = 300)
+ggsave("cohort_t2d_snps.png",g3,width = 12000, height = 2000, units = "px", type = "cairo", dpi = 300)
 ```
 
 ## Saving the final dataframe as a separate report
 ```{r}
-write.csv(df_final,"Chechen_case-control.csv")
+write.csv(df_final,"cohort_case-control.csv")
 ```
 
 
