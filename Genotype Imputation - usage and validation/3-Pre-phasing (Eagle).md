@@ -19,7 +19,7 @@ Eagle needs to be installed and configured in a linux environment.
   
 split the genetic map files by chromosome  
    
-    $ for CHR in {1..22},X; do  
+    $ for CHR in {1..22} X; do  
     zcat genetic_map_hg38_withX.txt.gz | grep ^${CHR} | sed '1ichr position COMBINED_rate(cM/Mb) Genetic_Map(cM)' \  
     > eagle_chr${CHR}_b38.map  
     done  
