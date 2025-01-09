@@ -10,7 +10,7 @@ In the general cases, we are interested only in bi-allelic simple variants (unle
   
 Moreover, some casses  require special treatment, such as dealing with chromosome X in case of hemizygous individuals (e.g., human males),pedigree studies, and HLA variants.  
   
-variant calling is based on a genomic assembly (fasta file that represents multiple human genomes in one), but assemblies become updated through time, the old (still in use) assembly is hg19 (GRCh38) that was released in Feb 2009, but the present assembly is hg38 (CRCh38). Different verions differ from each other by variant positions, addition of new variants, etc.  
+variant calling is based on a genomic assembly (fasta file that represents multiple human genomes in one), but assemblies become updated through time, the old (still in use) assembly is hg19 (GRCh37) that was released in Feb 2009, but the present assembly is hg38 (CRCh38). Different verions differ from each other by variant positions, addition of new variants, etc.  
   
 The "liftover" process is carried out to convert vcf data from one assembly to another.  
   
